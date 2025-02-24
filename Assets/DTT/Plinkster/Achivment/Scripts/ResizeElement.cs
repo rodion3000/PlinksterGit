@@ -9,18 +9,57 @@ public class ResizeElement : MonoBehaviour
     public float scaleFactor = 1.2f; // Коэффициент увеличения
     public float duration = 0.01f; // Длительность анимации
     public Vector3 offset = new Vector3(0.5f, 0, 0); // Смещение для соседних объектов
-    
+
+    private Vector3 originalScale; // Исходный размер
+    private Vector3[] originalPositions; // Исходные позиции соседних объектов
+    private bool isScaledUp = false; // Состояние увеличения
+
+    private void Start()
+    {
+        originalScale = transform.localScale; // Сохраняем исходный размер
+    }
 
     public void Resize()
     {
-        // Увеличиваем размер кнопки
-        transform.DOScale(scaleFactor, duration).OnComplete(() =>
+        if (!isScaledUp)
         {
-            // Подвигаем соседние объекты
-            MoveAdjacentObjects();
-        });
+            // Увеличиваем размер кнопки
+            transform.DOScale(originalScale * scaleFactor, duration).OnComplete(() =>
+            {
+                // Сохраняем исходные позиции соседних объектов
+                SaveAdjacentObjectsPositions();
+                // Подвигаем соседние объекты
+                MoveAdjacentObjects();
+            });
+        }
+        else
+        {
+            // Возвращаем размер кнопки обратно
+            transform.DOScale(originalScale, duration).OnComplete(() =>
+            {
+                // Возвращаем соседние объекты на исходные позиции
+                RestoreAdjacentObjectsPositions();
+            });
+        }
+
+        isScaledUp = !isScaledUp; // Переключаем состояние
     }
-    
+
+    private void SaveAdjacentObjectsPositions()
+    {
+        // Получаем все соседние объекты (например, по тегу или по имени)
+        GameObject[] adjacentObjects = GameObject.FindGameObjectsWithTag("Achivment");
+        originalPositions = new Vector3[adjacentObjects.Length];
+
+        for (int i = 0; i < adjacentObjects.Length; i++)
+        {
+            if (adjacentObjects[i] != gameObject)
+            {
+                originalPositions[i] = adjacentObjects[i].transform.position; // Сохраняем исходные позиции
+            }
+        }
+    }
+
     private void MoveAdjacentObjects()
     {
         // Получаем все соседние объекты (например, по тегу или по имени)
@@ -41,6 +80,21 @@ public class ResizeElement : MonoBehaviour
 
                 // Перемещаем объект
                 obj.transform.DOMove(targetPosition, duration);
+            }
+        }
+    }
+
+    private void RestoreAdjacentObjectsPositions()
+    {
+        // Получаем все соседние объекты (например, по тегу или по имени)
+        GameObject[] adjacentObjects = GameObject.FindGameObjectsWithTag("Achivment");
+
+        for (int i = 0; i < adjacentObjects.Length; i++)
+        {
+            if (adjacentObjects[i] != gameObject)
+            {
+                // Возвращаем объект на исходную позицию
+                adjacentObjects[i].transform.DOMove(originalPositions[i], duration);
             }
         }
     }
