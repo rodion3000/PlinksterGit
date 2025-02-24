@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1121632416528477653}
   - component: {fileID: 7050608616718891269}
   - component: {fileID: 7528451482482386659}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 6474174144577599628}
   - component: {fileID: 4815690267638362773}
   - component: {fileID: 4088543984595215892}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: AchivmentOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 3206215548321593439}
   - component: {fileID: 4213229655266255474}
   - component: {fileID: 2687979627239789516}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,9 +236,9 @@ GameObject:
   - component: {fileID: 4073525698860450966}
   - component: {fileID: -8000321305276411473}
   - component: {fileID: 6617757610985542457}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: AchivmentPrefab
-  m_TagString: Untagged
+  m_TagString: Achivment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -332,6 +332,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda3957a57389824b8d1974248dbd70d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaleFactor: 1.2
+  duration: 0.1
+  offset: {x: 0.5, y: 0, z: 0}
 --- !u!1 &7984250003206172933
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +346,7 @@ GameObject:
   - component: {fileID: 289913899501323957}
   - component: {fileID: 6015683855560693803}
   - component: {fileID: 3515135069177737274}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: AchivmentClosed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
