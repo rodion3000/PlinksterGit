@@ -8,15 +8,16 @@ public class ResizeElement : MonoBehaviour
 {
     public float scaleFactor = 1.2f; // Коэффициент увеличения
     public float duration = 0.01f; // Длительность анимации
-    public Vector3 offset = new Vector3(0.5f, 0, 0); // Смещение для соседних объектов
+    public float distance = 20.0f; // Расстояние для смещения соседних объектов
 
     private Vector3 originalScale; // Исходный размер
-    private Vector3[] originalPositions; // Исходные позиции соседних объектов
+    private List<Vector3> originalPositions; // Исходные позиции соседних объектов
     private bool isScaledUp = false; // Состояние увеличения
 
     private void Start()
     {
         originalScale = transform.localScale; // Сохраняем исходный размер
+        originalPositions = new List<Vector3>(); // Инициализируем список
     }
 
     public void Resize()
@@ -49,13 +50,13 @@ public class ResizeElement : MonoBehaviour
     {
         // Получаем все соседние объекты (например, по тегу или по имени)
         GameObject[] adjacentObjects = GameObject.FindGameObjectsWithTag("Achivment");
-        originalPositions = new Vector3[adjacentObjects.Length];
+        originalPositions.Clear(); // Очищаем список перед сохранением
 
-        for (int i = 0; i < adjacentObjects.Length; i++)
+        foreach (GameObject obj in adjacentObjects)
         {
-            if (adjacentObjects[i] != gameObject)
+            if (obj != gameObject)
             {
-                originalPositions[i] = adjacentObjects[i].transform.position; // Сохраняем исходные позиции
+                originalPositions.Add(obj.transform.position); // Сохраняем исходные позиции
             }
         }
     }
@@ -64,22 +65,21 @@ public class ResizeElement : MonoBehaviour
     {
         // Получаем все соседние объекты (например, по тегу или по имени)
         GameObject[] adjacentObjects = GameObject.FindGameObjectsWithTag("Achivment");
+        int index = 0; // Индекс для списка оригинальных позиций
 
         foreach (GameObject obj in adjacentObjects)
         {
-            if (obj != gameObject)
+            if (obj != gameObject && index < originalPositions.Count)
             {
                 Debug.Log("Moving object: " + obj.name);
             
                 // Вычисляем направление от увеличивающегося объекта к соседнему объекту
                 Vector3 direction = (obj.transform.position - transform.position).normalized;
-            
-                // Увеличиваем расстояние, на которое мы хотим отодвинуть объекты
-                float distance = 20.0f; // Задайте нужное расстояние
                 Vector3 targetPosition = obj.transform.position + direction * distance;
 
                 // Перемещаем объект
                 obj.transform.DOMove(targetPosition, duration);
+                index++; // Увеличиваем индекс
             }
         }
     }
@@ -88,13 +88,15 @@ public class ResizeElement : MonoBehaviour
     {
         // Получаем все соседние объекты (например, по тегу или по имени)
         GameObject[] adjacentObjects = GameObject.FindGameObjectsWithTag("Achivment");
+        int index = 0; // Индекс для списка оригинальных позиций
 
-        for (int i = 0; i < adjacentObjects.Length; i++)
+        foreach (GameObject obj in adjacentObjects)
         {
-            if (adjacentObjects[i] != gameObject)
+            if (obj != gameObject && index < originalPositions.Count)
             {
                 // Возвращаем объект на исходную позицию
-                adjacentObjects[i].transform.DOMove(originalPositions[i], duration);
+                obj.transform.DOMove(originalPositions[index], duration);
+                index++; // Увеличиваем индекс
             }
         }
     }
